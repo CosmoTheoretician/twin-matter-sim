@@ -1,0 +1,36 @@
+Assumptions in force for this run (lss, seed 1)
+
+A1 Force law: 1/r^2 force in the plane (razor-thin sheet, 'flat gas'; FFT kernel -2piG/|k|). Pages say only 'sum of Newtonian forces' for mass points in a plane.
+
+A2 Boundary conditions: periodic box; direct sum uses the minimum-image rule (the 'dashed rectangle' tiling), PM uses exact periodic images; box = 1 L, method = pm. Pages are silent for LSS (torus only mentioned for the spiral run).
+
+A3 Net signed mass M_+ - |M_-| = -63 (box not neutral); k=0 mode removed (Jeans swindle: uniform background subtracted); the minimum-image direct sum does this implicitly by symmetry.
+
+A4 Absolute velocity scale set by lambda_J(neg)/L = 0.0625: sigma_- = 2, sigma_+ = 0.5 per component; lambda_J,+ = 0.25 L, lambda_J,- = 0.0625 L (dispersion relation of dim=2, law=r2); t_J,neg = 0.03125 (code units). Pages give only ratios ('temperature' unspecified).
+
+A5 '<V_twin> = 4<V>' read as a mean-speed ratio => sigma_-/sigma_+ = vel_ratio = 4 per component (mean speed proportional to sigma for a Maxwellian).
+
+A6 '|M_twin| = 64 M' implemented as a density ratio mass_ratio = 64 (total |M_-| / M_+); particle weights w_+ = 6.25e-07, w_- = 4e-05 (N_+ = 1600000, N_- = 1600000); identical to a per-particle ratio when N_+ = N_-.
+
+A7 Initial positions: ic = poisson, jitter = 0 mean spacings (Poisson shot noise seeds the instability); seed = 1. Pages say only 'uniform'.
+
+A8 Softening: PM grid 128^2, cell = 0.007812 L, no extra smoothing; effective softening = 0.007812. Pages mention a cut-in only for cluster runs.
+
+A9 Timestep: leapfrog KDK, dt = 0.02 t_J,neg = 0.000625 code units, 3000 steps (fixed); dtype = float64. Pages: 'small enough that halving it changes nothing'.
+
+A10 Run length tmax = 60 t_J,neg = 1.875 code units; snapshots every 1, structure every 0.5 t_J,neg. Pages: 'remarkably stable' / 'impressive number of turns' (no duration given).
+
+A11 Galaxy disk: not applicable to the LSS scenario.
+
+A12 Twin ring: not applicable to the LSS scenario.
+
+A13 Box: 1 L (periodic); LSS box is the unit of length.
+
+A14 Units: G = 1; L = 1, M_+ = 1 (total positive mass).
+
+A15 Expansion: kinematic comoving frame a(t) = (t/t0)^0.6667 switched on at t0 = 1 t_J,neg; equations x'' + 2H x' = g_c / a^3 (p = 2). Not a Janus cosmology; tests only whether Hubble drag erases the pattern.
+
+A16 Dimension: 2-D (pages: 3-D 'beyond our capabilities').
+
+A17 Potential energy: PM self-energy subtracted using the measured potential of a unit particle at a cell centre; residual position dependence appears as noise, not drift. Conserved diagnostics: E = KE + U and |m|-weighted momentum P_abs = sum |m| v; the signed momentum sum m v is NOT conserved (cross-sign pairs receive parallel impulses) and its drift is expected physics.
+

@@ -1,0 +1,231 @@
+{
+  "scenario": "lss",
+  "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "n_ok": 5,
+  "rows": [
+    {
+      "seed": 1,
+      "outdir": "out/ensemble_lss_20261015_042512/seed_1",
+      "status": "ok",
+      "error": "",
+      "n_clumps_neg_final": 4.0,
+      "n_clumps_change_5_20": -0.6363636363636364,
+      "segregation_final": -0.2342903881131098,
+      "persistence_final": -0.03182631582603461,
+      "phi_over_d": 0.25297562855316014,
+      "lambda_peak_pos": 1.0,
+      "dE_rel_max": 30.79234749884818,
+      "dP_abs_rel_max": 1.5412916943026274e-16,
+      "wall_time": 192.47369985000114,
+      "verdict_cells_form": "met",
+      "verdict_stable_clumps": "not met",
+      "verdict_persistence": "not met"
+    },
+    {
+      "seed": 2,
+      "outdir": "out/ensemble_lss_20261015_042512/seed_2",
+      "status": "ok",
+      "error": "",
+      "n_clumps_neg_final": 3.0,
+      "n_clumps_change_5_20": -0.5714285714285714,
+      "segregation_final": -0.2456910122488237,
+      "persistence_final": -0.045356017657462326,
+      "phi_over_d": 0.4382992906368059,
+      "lambda_peak_pos": 1.0,
+      "dE_rel_max": 28.13169506301123,
+      "dP_abs_rel_max": 2.41825816383998e-16,
+      "wall_time": 180.25543772999663,
+      "verdict_cells_form": "met",
+      "verdict_stable_clumps": "not met",
+      "verdict_persistence": "not met"
+    },
+    {
+      "seed": 3,
+      "outdir": "out/ensemble_lss_20261015_042512/seed_3",
+      "status": "ok",
+      "error": "",
+      "n_clumps_neg_final": 5.0,
+      "n_clumps_change_5_20": -0.6666666666666666,
+      "segregation_final": -0.2523826006255723,
+      "persistence_final": 0.01997327474568992,
+      "phi_over_d": 0.4385477134287193,
+      "lambda_peak_pos": 1.0,
+      "dE_rel_max": 22.697881603424946,
+      "dP_abs_rel_max": 9.782390764879871e-17,
+      "wall_time": 180.56207862000156,
+      "verdict_cells_form": "met",
+      "verdict_stable_clumps": "not met",
+      "verdict_persistence": "not met"
+    },
+    {
+      "seed": 4,
+      "outdir": "out/ensemble_lss_20261015_042512/seed_4",
+      "status": "ok",
+      "error": "",
+      "n_clumps_neg_final": 4.0,
+      "n_clumps_change_5_20": -0.6363636363636364,
+      "segregation_final": -0.24805122532931614,
+      "persistence_final": 0.05308516286545558,
+      "phi_over_d": 0.2662291688980493,
+      "lambda_peak_pos": 1.0,
+      "dE_rel_max": 33.53667235034584,
+      "dP_abs_rel_max": 2.3273087402366756e-16,
+      "wall_time": 180.17380632599816,
+      "verdict_cells_form": "met",
+      "verdict_stable_clumps": "not met",
+      "verdict_persistence": "not met"
+    },
+    {
+      "seed": 5,
+      "outdir": "out/ensemble_lss_20261015_042512/seed_5",
+      "status": "ok",
+      "error": "",
+      "n_clumps_neg_final": 4.0,
+      "n_clumps_change_5_20": -0.6666666666666666,
+      "segregation_final": -0.26828878796516825,
+      "persistence_final": 0.061064007389973696,
+      "phi_over_d": 0.41708720976157565,
+      "lambda_peak_pos": 0.5,
+      "dE_rel_max": 27.223750530940034,
+      "dP_abs_rel_max": 1.9144320658501397e-16,
+      "wall_time": 180.7354142030017,
+      "verdict_cells_form": "met",
+      "verdict_stable_clumps": "not met",
+      "verdict_persistence": "not met"
+    }
+  ],
+  "stats": {
+    "n_clumps_neg_final": {
+      "mean": 4.0,
+      "std": 0.6324555320336759,
+      "n": 5,
+      "std_over_mean": 0.15811388300841897
+    },
+    "n_clumps_change_5_20": {
+      "mean": -0.6354978354978355,
+      "std": 0.03478321978632149,
+      "n": 5,
+      "std_over_mean": 0.05473381315150044
+    },
+    "segregation_final": {
+      "mean": -0.24974080285639802,
+      "std": 0.011036101113828307,
+      "n": 5,
+      "std_over_mean": 0.04419022037089434
+    },
+    "persistence_final": {
+      "mean": 0.011388022303524453,
+      "std": 0.043283776812834164,
+      "n": 5,
+      "std_over_mean": 3.800815950232058
+    },
+    "phi_over_d": {
+      "mean": 0.36262780225566205,
+      "std": 0.08458383987871057,
+      "n": 5,
+      "std_over_mean": 0.23325249567896275
+    },
+    "lambda_peak_pos": {
+      "mean": 0.9,
+      "std": 0.2,
+      "n": 5,
+      "std_over_mean": 0.22222222222222224
+    },
+    "dE_rel_max": {
+      "mean": 28.476469409314046,
+      "std": 3.6345342507255167,
+      "n": 5,
+      "std_over_mean": 0.12763289572466235
+    },
+    "dP_abs_rel_max": {
+      "mean": 1.835905948143482e-16,
+      "std": 5.3087986958769e-17,
+      "n": 5,
+      "std_over_mean": 0.2891650686815031
+    },
+    "wall_time": {
+      "mean": 182.84008734579984,
+      "std": 4.821098024038899,
+      "n": 5,
+      "std_over_mean": 0.026367839208701012
+    }
+  },
+  "reproducible": {
+    "metric": "n_clumps_neg_final",
+    "std_over_mean": 0.15811388300841897,
+    "threshold": 0.2,
+    "band": 0.05,
+    "n_seeds_used": 5,
+    "verdict": "ambiguous (within noise)"
+  },
+  "verdict_counts": {
+    "cells_form": {
+      "met": 5
+    },
+    "stable_clumps": {
+      "not met": 5
+    },
+    "persistence": {
+      "not met": 5
+    }
+  },
+  "base_config": {
+    "scenario": "lss",
+    "dim": 2,
+    "method": "auto",
+    "bc": "periodic",
+    "force_law": "r2",
+    "soft": "plummer",
+    "eps": -1.0,
+    "grid": 64,
+    "dt": -1.0,
+    "adaptive": false,
+    "eta": 0.1,
+    "tmax": -1.0,
+    "snap_every": -1.0,
+    "log_every": 10,
+    "structure_every": 0.5,
+    "dtype": "float64",
+    "direct_chunk": 1024,
+    "seed": 1,
+    "outdir": "",
+    "quiet": false,
+    "npos": 400000,
+    "nneg": 400000,
+    "mass_ratio": 64.0,
+    "vel_ratio": 4.0,
+    "lambda_j_neg": 0.125,
+    "ic": "poisson",
+    "ic_noise": 0.0,
+    "neg_only": false,
+    "pos_only": false,
+    "expansion": true,
+    "a_index": 0.6667,
+    "t0_exp": 1.0,
+    "structure_grid": 128,
+    "clump_threshold": 5.0,
+    "clump_min_cells": 4,
+    "ndisk": 5000,
+    "ntwin": 5000,
+    "rd": 1.0,
+    "rmax": 4.0,
+    "q": 1.5,
+    "zscale": 0.1,
+    "twin_ratio": 1.0,
+    "twin_rin": 4.5,
+    "twin_rout": 7.0,
+    "twin_sigma": 0.5,
+    "twin_rot": 0.0,
+    "control": "live",
+    "halo_vc": 1.0,
+    "halo_rc": 1.0,
+    "box": -1.0,
+    "label": ""
+  }
+}

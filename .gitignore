@@ -1,0 +1,10 @@
+venv/
+__pycache__/
+*.pyc
+.env
+pages/
+analysis.jsonl
+sim/out/**/*.png
+sim/out/**/*.npy
+sim/out/**/*.npz
+sim/out/**/frames.txt

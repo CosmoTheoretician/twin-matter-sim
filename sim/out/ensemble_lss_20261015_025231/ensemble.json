@@ -1,0 +1,234 @@
+{
+  "scenario": "lss",
+  "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "n_ok": 5,
+  "rows": [
+    {
+      "seed": 1,
+      "outdir": "out/ensemble_lss_20261015_025231/seed_1",
+      "status": "ok",
+      "error": "",
+      "n_clumps_neg_final": 1.0,
+      "n_clumps_change_5_20": -0.6666666666666666,
+      "segregation_final": -0.6954920582418049,
+      "persistence_final": 0.6194130588373666,
+      "phi_over_d": 0.5911676265205349,
+      "lambda_peak_pos": 1.0,
+      "dE_rel_max": 0.05182294310480116,
+      "dP_abs_rel_max": 2.5521407041548176e-16,
+      "wall_time": 196.56370220399913,
+      "verdict_cells_form": "met",
+      "verdict_stable_clumps": "not met",
+      "verdict_persistence": "not met"
+    },
+    {
+      "seed": 2,
+      "outdir": "out/ensemble_lss_20261015_025231/seed_2",
+      "status": "ok",
+      "error": "",
+      "n_clumps_neg_final": 1.0,
+      "n_clumps_change_5_20": 0.0,
+      "segregation_final": -0.6879313389710136,
+      "persistence_final": 0.7486371692022492,
+      "phi_over_d": 0.47282111711394387,
+      "lambda_peak_pos": 1.0,
+      "dE_rel_max": 0.05514750397593151,
+      "dP_abs_rel_max": 1.8715348528932406e-16,
+      "wall_time": 192.15763169000275,
+      "verdict_cells_form": "met",
+      "verdict_stable_clumps": "met",
+      "verdict_persistence": "ambiguous (within noise)"
+    },
+    {
+      "seed": 3,
+      "outdir": "out/ensemble_lss_20261015_025231/seed_3",
+      "status": "ok",
+      "error": "",
+      "n_clumps_neg_final": 1.0,
+      "n_clumps_change_5_20": 0.0,
+      "segregation_final": -0.7090105630069486,
+      "persistence_final": 0.582161110516479,
+      "phi_over_d": 0.5519282190683389,
+      "lambda_peak_pos": 1.0,
+      "dE_rel_max": 0.04407947307173425,
+      "dP_abs_rel_max": 1.5347055932758951e-16,
+      "wall_time": 190.65123585000038,
+      "verdict_cells_form": "met",
+      "verdict_stable_clumps": "not met",
+      "verdict_persistence": "not met"
+    },
+    {
+      "seed": 4,
+      "outdir": "out/ensemble_lss_20261015_025231/seed_4",
+      "status": "ok",
+      "error": "",
+      "n_clumps_neg_final": 1.0,
+      "n_clumps_change_5_20": -0.6666666666666666,
+      "segregation_final": -0.7554184022414421,
+      "persistence_final": 0.5822091163647974,
+      "phi_over_d": 0.5778398901187282,
+      "lambda_peak_pos": 1.0,
+      "dE_rel_max": 0.021902123853488283,
+      "dP_abs_rel_max": 1.213934862588975e-16,
+      "wall_time": 191.23721054999987,
+      "verdict_cells_form": "met",
+      "verdict_stable_clumps": "not met",
+      "verdict_persistence": "not met"
+    },
+    {
+      "seed": 5,
+      "outdir": "out/ensemble_lss_20261015_025231/seed_5",
+      "status": "ok",
+      "error": "",
+      "n_clumps_neg_final": 1.0,
+      "n_clumps_change_5_20": 0.0,
+      "segregation_final": -0.6369785185270449,
+      "persistence_final": 0.8209537126421682,
+      "phi_over_d": 0.4100500658173171,
+      "lambda_peak_pos": 1.0,
+      "dE_rel_max": 0.06757335424916708,
+      "dP_abs_rel_max": 2.0681394594360463e-16,
+      "wall_time": 193.79344578900054,
+      "verdict_cells_form": "met",
+      "verdict_stable_clumps": "met",
+      "verdict_persistence": "met"
+    }
+  ],
+  "stats": {
+    "n_clumps_neg_final": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n": 5,
+      "std_over_mean": 0.0
+    },
+    "n_clumps_change_5_20": {
+      "mean": -0.26666666666666666,
+      "std": 0.3265986323710904,
+      "n": 5,
+      "std_over_mean": 1.224744871391589
+    },
+    "segregation_final": {
+      "mean": -0.6969661761976508,
+      "std": 0.03806323781117902,
+      "n": 5,
+      "std_over_mean": 0.05461274752074162
+    },
+    "persistence_final": {
+      "mean": 0.670674833512612,
+      "std": 0.09690252742894621,
+      "n": 5,
+      "std_over_mean": 0.14448511049896726
+    },
+    "phi_over_d": {
+      "mean": 0.5207613837277726,
+      "std": 0.06890810056537133,
+      "n": 5,
+      "std_over_mean": 0.13232183245252488
+    },
+    "lambda_peak_pos": {
+      "mean": 1.0,
+      "std": 0.0,
+      "n": 5,
+      "std_over_mean": 0.0
+    },
+    "dE_rel_max": {
+      "mean": 0.04810507965102446,
+      "std": 0.015134281388427501,
+      "n": 5,
+      "std_over_mean": 0.3146088001146298
+    },
+    "dP_abs_rel_max": {
+      "mean": 1.848091094469795e-16,
+      "std": 4.571698468671797e-17,
+      "n": 5,
+      "std_over_mean": 0.24737408682678527
+    },
+    "wall_time": {
+      "mean": 192.88064521660053,
+      "std": 2.1256531158357945,
+      "n": 5,
+      "std_over_mean": 0.011020562034354121
+    }
+  },
+  "reproducible": {
+    "metric": "n_clumps_neg_final",
+    "std_over_mean": 0.0,
+    "threshold": 0.2,
+    "band": 0.05,
+    "n_seeds_used": 5,
+    "verdict": "met"
+  },
+  "verdict_counts": {
+    "cells_form": {
+      "met": 5
+    },
+    "stable_clumps": {
+      "not met": 3,
+      "met": 2
+    },
+    "persistence": {
+      "not met": 3,
+      "ambiguous (within noise)": 1,
+      "met": 1
+    }
+  },
+  "base_config": {
+    "scenario": "lss",
+    "dim": 2,
+    "method": "auto",
+    "bc": "periodic",
+    "force_law": "r2",
+    "soft": "plummer",
+    "eps": -1.0,
+    "grid": 64,
+    "dt": -1.0,
+    "adaptive": false,
+    "eta": 0.1,
+    "tmax": -1.0,
+    "snap_every": -1.0,
+    "log_every": 10,
+    "structure_every": 0.5,
+    "dtype": "float64",
+    "direct_chunk": 1024,
+    "seed": 1,
+    "outdir": "",
+    "quiet": false,
+    "npos": 400000,
+    "nneg": 400000,
+    "mass_ratio": 64.0,
+    "vel_ratio": 4.0,
+    "lambda_j_neg": 0.125,
+    "ic": "poisson",
+    "ic_noise": 0.0,
+    "neg_only": false,
+    "pos_only": false,
+    "expansion": false,
+    "a_index": 0.6667,
+    "t0_exp": 1.0,
+    "structure_grid": 128,
+    "clump_threshold": 5.0,
+    "clump_min_cells": 4,
+    "ndisk": 5000,
+    "ntwin": 5000,
+    "rd": 1.0,
+    "rmax": 4.0,
+    "q": 1.5,
+    "zscale": 0.1,
+    "twin_ratio": 1.0,
+    "twin_rin": 4.5,
+    "twin_rout": 7.0,
+    "twin_sigma": 0.5,
+    "twin_rot": 0.0,
+    "control": "live",
+    "halo_vc": 1.0,
+    "halo_rc": 1.0,
+    "box": -1.0,
+    "label": ""
+  }
+}
