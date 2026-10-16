@@ -20,7 +20,7 @@ This repository reproduces, and then stress-tests, the 2-D N-body simulations of
 
 **The large cells need twin matter.** Ordinary matter alone, under the same expansion, forms only fine-grained structure about a quarter of the size of the mixed run's cells.
 
-**The galaxy result is not reproduced so far.** A bare disk with no twin matter already forms a bar and a spiral lasting 9 of 10 rotations, as classic galactic dynamics predicts. A twin-matter ring around the disk, set up as described in the original work, disperses within one rotation in open space; in the periodic torus used in the original runs, the twin matter makes the bar and spiral slightly *weaker*, not stronger or longer-lived. These runs cover 10 rotations, against the 30 to 50 turns claimed originally, and use a different disk setup, so this is suggestive rather than decisive.
+**The galaxy result is not reproduced.** A bare disk with no twin matter forms a bar that lasts 50 rotations at constant strength, as classic galactic dynamics predicts. A setup resembling the original animation reproduces its sequence (a twin shell fragmenting into clumps that are pushed to the edges of the box, around a barred galaxy), but the twin clumps then merge into one, far from the galaxy, and the bar ends identical with and without twin matter. The one genuine twin-matter effect is braking of the galaxy's rotation by close passes of twin clumps.
 
 All results are 2-D. The code also runs in 3-D and on the GPU.
 
@@ -115,22 +115,53 @@ Ordinary matter alone forms only fine-grained structure (dominant scale 0.08 of 
 
 ## Results: the galaxy
 
-All runs: 100,000 disk particles (and 100,000 twin particles where present), box 32 R_d, 512² grid, 10 rotations at 2 R_d, GPU in float32.
+| Twin shell, Petit-like setup (torus) | Same disk, no twin matter (torus) |
+|---|---|
+| ![Petit-like run](media/galaxy_petit_like.gif) | ![Bare disk](media/galaxy_petit_like_bare.gif) |
 
-| | Bare disk (isolated) | Live twin ring (isolated) | Bare disk (torus) | Live twin ring (torus) |
-|---|---|---|---|---|
-| Bar strength (final) | 0.40 | 0.41 | 0.42 | 0.36 |
-| Spiral strength (late) | 0.27 | 0.25 | 0.17 | 0.13 |
-| Rotations with spiral | 9 | 9 | 9 | 9 |
-| Pitch angle | 53° | 54° | 45° | 36° |
+All runs use a 2-D exponential disk of 100,000 particles (scale length R_d, truncated at 4 R_d, Toomre Q = 1.5), with 100,000 twin particles where present, a 0.0625 R_d grid cell, and GPU float32. Time is in rotations at 2 R_d.
 
-**In open space, the twin ring does not survive.** It is not rotating, its own gravity is too weak to bind it (its Jeans length, 9.6 R_d, exceeds its width, 2.5 R_d), and the disk repels it. Its rms radius grows from 5.9 R_d to 11.8 R_d after one rotation and 135 R_d by the end, so for 9 of the 10 rotations the disk is effectively bare, which is why the two isolated runs match.
+### Numerical lessons
 
-**In the periodic torus**, twin matter cannot escape and surrounds the galaxy, but it makes the bar and spiral somewhat weaker than in the bare disk.
+- **Galaxies need isolated boundaries for clean results.** A bare disk in a periodic box drifts by 108% in energy against about 1% with isolated boundaries, partly because the solver adds a uniform background when the box is not mass-neutral.
+- **The structure is a bar, not spiral arms.** The code's "spiral" measure averages a pitch angle near 75-80° in the cleanest runs, which is what a bar looks like; the snapshots show a bar with no lasting spiral arms in every run. Results below are therefore given as bar strength.
+- **Bars decay in the torus but not in open space**, with or without twin matter, and at both box sizes tested (32 and 64 R_d). This is a property of periodic boxes (most plausibly outflung material wrapping around and falling back), not of twin matter.
 
-**A bare disk forms a bar and a spiral lasting 9 of 10 rotations by itself**, in every setup tested, consistent with the classic bar instability of cold disks. A heavy rigid halo suppresses both, as Ostriker and Peebles (1973) found. So a barred spiral lasting several turns is not by itself evidence for twin matter.
+### Bar strength over 50 rotations
 
-Open questions: runs of 30 to 50 rotations as claimed originally, a self-bound (colder or rotating) twin ring, a setup closer to the original Vlasov equilibrium galaxy, the assumed disk temperature and ring mass, and a live (particle) halo as a control, since rigid halos can stabilize disks artificially.
+| Rotations | 0 | 5 | 10 | 20 | 30 | 40 | 50 |
+|---|---|---|---|---|---|---|---|
+| Bare disk, isolated | 0.03 | 0.45 | 0.42 | 0.47 | 0.46 | 0.45 | 0.44 |
+| Bare disk, torus | 0.03 | 0.44 | 0.43 | 0.35 | 0.31 | 0.26 | 0.22 |
+| Live twin ring, torus | 0.03 | 0.36 | 0.34 | 0.32 | 0.28 | 0.24 | 0.21 |
+
+**A bare disk forms a bar that lasts the full 50 rotations at constant strength**, with 0.4-0.5% energy error, in boxes of 32 and 64 R_d. Long-lived bars in isolated disks are a standard result of galactic dynamics. A barred structure persisting for 30-50 turns, the duration claimed for the original twin-matter galaxy, therefore does not require twin matter.
+
+### What the twin matter does
+
+- **A hot, non-rotating twin ring disperses in open space.** Nothing binds it (its Jeans length, 9.6 R_d, exceeds its width), and the disk repels it: its rms radius grows from 5.9 R_d to 11.8 R_d in one rotation and 135 R_d by ten. The disk then behaves like a bare disk.
+- **In the periodic torus, the twin matter fills the box with a void about 5 R_d across around the galaxy**, matching the "negative-mass environment" of the original picture. Inside the void, the bar forms weaker (0.36 against 0.44 at five rotations) and ends at the same strength as in the bare disk.
+- **A heavy twin ring (four times the disk mass) binds itself**, ends as a single twin clump, and takes almost all of the disk's angular momentum. This run is not directly comparable with the others (heavier ring, non-neutral box), but shows that a self-bound twin structure can brake a galaxy strongly.
+
+### Comparison with the original animation
+
+A GIF from the author's website shows the original galaxy run: a disk surrounded by a thin twin shell, which within a few hundred million years breaks into four or five twin clumps that sit near the edges and corners of the frame, while the galaxy develops a bar that persists until the end of the animation at 2,200 million years.
+
+A run set up to resemble it (a cold twin shell from 4.5 to 6 R_d with the disk's mass, in a torus 40 R_d across) reproduces this sequence: the shell fragments into about 16 clumps within one rotation; by five rotations about nine clumps have been pushed outward, and close passes distort the galaxy into a lopsided shape with tidal extensions; by 15 rotations a handful of clumps sit near the box edges around a barred galaxy, closely resembling the original frames. The clumps keep merging, because twin matter attracts twin matter, and by 50 rotations a single clump remains at the corner of the box, the point farthest from the galaxy and its periodic copies (it appears split across all four corners because of the wrap-around).
+
+| | Petit-like twin shell | Same disk, no twin matter |
+|---|---|---|
+| Bar strength (final) | 0.21 | 0.21 |
+| Disk angular momentum change | -65% | -46% |
+| Twin clumps at end | 1 | n/a |
+
+The bar ends identical with and without twin matter. The one genuine twin-matter effect is **braking**: close passes of twin clumps transfer angular momentum from the disk to the twin matter, which matches the original report that the galaxy's rotation slowed. The four or five clumps in the original frames correspond to an intermediate stage of this sequence; the original animation covers 2,200 million years, which plausibly corresponds to 10-20 rotations here.
+
+### Interpretation
+
+The original galaxy simulation appears to show real dynamics: a twin shell fragmenting, clumps pushed away from the galaxy, braking, and a lasting bar. But the twin matter does not confine the galaxy: it leaves within a few rotations and ends as far from it as the box allows, and the lasting bar is the same as in a disk with no twin matter at all. Under these assumptions, the simulations do not support the claim that twin matter stabilizes a barred spiral galaxy.
+
+Caveats: the original initial conditions were never published, so this setup is a reconstruction from text and a low-resolution animation; the colors in the animation are inferred; most galaxy results are single seeds; and all runs are 2-D.
 
 ## Comparison with the literature
 
@@ -167,10 +198,16 @@ Folders are under `sim/out/` (CPU) or `sim_gpu*/out/` (GPU). Each contains `summ
 | Galaxy, live ring, torus | `sim_gpu2/out/galaxy_20261016_141631` | Twin matter slightly weakens the spiral |
 | Galaxy, rigid halo (5k) | `sim_gpu2/out/galaxy_20261016_140102` | A heavy halo suppresses bar and spiral |
 | Galaxy, periodic vs isolated boundaries | `sim_gpu2/out/galaxy_20261016_140319`, `galaxy_20261016_140516` | Why galaxies need isolated boundaries |
+| Galaxy, bare disk, isolated, 50 rotations | `sim_gpu2/out/galaxy_20261016_145041` | Bar lasts 50 rotations without twin matter |
+| Galaxy, bare disk, isolated, box 64 | `sim_gpu2/out/galaxy_20261016_150723` | Same bar in a larger box |
+| Galaxy, torus pair, 50 rotations | `sim_gpu2/out/galaxy_20261016_144529`, `galaxy_20261016_144819` | Bar decays in the torus with and without twin matter |
+| Galaxy, heavy twin ring, box 64 | `sim_gpu2/out/galaxy_20261016_150116` | Self-bound twin clump, strong braking |
+| Galaxy, Petit-like twin shell | `sim_gpu2/out/galaxy_20261016_151616` | Reproduces the original animation's sequence |
+| Galaxy, Petit-like control (no twin) | `sim_gpu2/out/galaxy_20261016_151915` | Same final bar without twin matter |
 
 ## What this says about the original claims
 
-The mechanism Petit described for large-scale structure is reproducible and robust: twin matter clumps, ordinary matter is confined to walls, and a cellular pattern forms quickly. The stability he reported is not reproduced under his assumptions: in a static box, the cells merge until one clump remains, and with an added expansion law the merging slows but continues. The galaxy claim is not supported so far: the bare disk already forms a lasting bar and spiral, and the twin matter either disperses or slightly weakens the structure, although longer runs with a setup closer to the original are still needed. The simulations do not test the claims about dark matter, galaxy rotation curves or the observed cosmic web.
+The mechanism Petit described for large-scale structure is reproducible and robust: twin matter clumps, ordinary matter is confined to walls, and a cellular pattern forms quickly. The stability he reported is not reproduced under his assumptions: in a static box, the cells merge until one clump remains, and with an added expansion law the merging slows but continues. The galaxy claim is not supported: a lasting bar forms without twin matter, and in a setup resembling the original animation the twin matter fragments, moves away from the galaxy and merges into a single distant clump, leaving the bar identical to the bare disk; the one real twin-matter effect is braking of the galaxy's rotation. The simulations do not test the claims about dark matter, galaxy rotation curves or the observed cosmic web.
 
 ## Limitations
 

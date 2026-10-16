@@ -1,0 +1,36 @@
+Assumptions in force for this run (galaxy, seed 1)
+
+A1 Force law: 1/r^2 force in the plane (razor-thin sheet, 'flat gas'; FFT kernel -2piG/|k|). Pages say only 'sum of Newtonian forces' for mass points in a plane.
+
+A2 Boundary conditions: periodic box; direct sum uses the minimum-image rule (the 'dashed rectangle' tiling), PM uses exact periodic images; box = 40 R_d, method = pm. Pages: computational space closed on a flat torus.
+
+A3 Net signed mass M_disk - |M_twin| = 0; k=0 mode removed in the periodic solver (Jeans swindle).
+
+A4 Velocity scale: analytic Freeman v_c(2R_d) = 0.6516 of the truncated exponential disk alone -> T_rot(2R_d) = 19.29 used as reference time; actual disk velocities come from the measured field (A11).
+
+A5 '<V_twin> = 4<V>' read as a mean-speed ratio => sigma_-/sigma_+ = vel_ratio = 4 per component (mean speed proportional to sigma for a Maxwellian). (LSS parameter; unused for the galaxy.)
+
+A6 '|M_twin| = 64 M' implemented as a density ratio mass_ratio = 64 (total |M_-| / M_+); particle weights w_+ = 1e-05, w_- = 1e-05 (N_+ = 5000, N_- = 5000); identical to a per-particle ratio when N_+ = N_-. (LSS parameter; galaxy uses twin_ratio, A12.)
+
+A7 Initial positions: ic = poisson, jitter = 0 mean spacings (Poisson shot noise seeds the instability); seed = 1. Pages say only 'uniform'.
+
+A8 Softening: PM grid 640^2, cell = 0.0625 R_d, no extra smoothing; effective softening = 0.0625. Pages mention a cut-in only for cluster runs.
+
+A9 Timestep: leapfrog KDK, dt = 0.005 T_rot(2R_d) = 0.09643 code units, 10000 steps (fixed); dtype = float32; device = gpu (PyTorch, ROCm through the cuda device name). Pages: 'small enough that halving it changes nothing'.
+
+A10 Run length tmax = 50 T_rot(2R_d) = 964.3 code units; snapshots every 0.5, structure every 0.5 T_rot(2R_d). Pages: 'remarkably stable' / 'impressive number of turns' (no duration given).
+
+A11 Galaxy disk: 2-D exponential disk, R_d = 1, truncated at 4 (= 4 R_d), N_disk = 100000, Toomre Q = 1.5; v_c measured from the actual initial force field (including the twin ring's repulsion), epicyclic dispersions with asymmetric-drift correction; where the net radial force points outward v_c is undefined and this is logged, not patched. Pages: 'rotating central clump', IC analytic solution never published.
+
+A12 Twin ring: control = live; annulus 4.5-6 R_d of negative mass, |M_twin| = twin_ratio x M_disk = 1, N_twin = 100000 (w = 1e-05), Maxwellian sigma = 0.15 v_c,ref = 0.09774, rotation fraction 0; ring Jeans length (self-gravity of the ring alone) = 0.4727 R_d vs ring width 1.5 R_d -- fragmentation is a measured outcome, not assumed absent.
+
+A13 Box: 40 R_d (periodic); the pages give no torus size.
+
+A14 Units: G = 1; M_disk = 1, R_d = 1.
+
+A15 Expansion: none (as in the original runs: 'we do not know how').
+
+A16 Dimension: 2-D (pages: 3-D 'beyond our capabilities').
+
+A17 Potential energy: PM self-energy subtracted using the measured potential of a unit particle at a cell centre; residual position dependence appears as noise, not drift. Conserved diagnostics: E = KE + U and |m|-weighted momentum P_abs = sum |m| v; the signed momentum sum m v is NOT conserved (cross-sign pairs receive parallel impulses) and its drift is expected physics.
+
