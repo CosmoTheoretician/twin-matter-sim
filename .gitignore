@@ -8,3 +8,11 @@ sim/out/**/*.png
 sim/out/**/*.npy
 sim/out/**/*.npz
 sim/out/**/frames.txt
+venv-gpu/
+venv-gpu/
+sim_gpu/out/**/*.png
+sim_gpu2/out/**/*.png
+sim_gpu/out/**/frames.txt
+sim_gpu2/out/**/frames.txt
+*.whl
+*.pt

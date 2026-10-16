@@ -2,17 +2,21 @@
 
 This repository reproduces, and then stress-tests, the 2-D N-body simulations of "twin matter" published by Jean-Pierre Petit and collaborators in the 1990s and early 2000s, in which a population of negative-mass particles interacts gravitationally with ordinary matter. The goal is neutral: find out how far the original results can be reproduced with modern numerical methods, and where they stop holding.
 
-| Static box (original setup) | Expanding box, 8 Jeans lengths | Expanding box, 16 Jeans lengths |
+| Static box (original setup) | Expanding box, 8 Jeans lengths | Expanding box, 32 Jeans lengths, 60 Jeans times |
 |---|---|---|
-| ![Static baseline](media/static_baseline.gif) | ![Expansion, small box](media/expansion_small_box.gif) | ![Expansion, big box](media/expansion_big_box.gif) |
+| ![Static baseline](media/static_baseline.gif) | ![Expansion, small box](media/expansion_small_box.gif) | ![Expansion, 32 Jeans lengths](media/expansion_box32_long.gif) |
 
 ## Summary of findings
 
-In a static periodic box, the mechanism described in the original work is robust: the heavy negative-mass population collapses into clumps, ordinary matter is pushed out into walls around them, and a cellular pattern appears after about 2 to 3 negative Jeans times. That pattern is transient, however. Across five random seeds, two timesteps and two box sizes, the negative clumps keep merging until a single box-scale clump remains. Under the original assumptions, the simulations support "cells form" but not "cells are stable".
+**Cells form, robustly.** With Petit's interaction laws and parameters, the heavy negative-mass population collapses into clumps, ordinary matter is pushed out into walls around them, and a cellular pattern appears within about 2 to 3 negative Jeans times. This held in every run: five seeds, two timesteps, four box sizes, with and without expansion, at up to 12.8 million particles.
 
-With a kinematic cosmic expansion added (not part of the original setup), merging slows considerably and a multi-cell network with negative clumps inside ordinary-matter voids survives to the end of the run. In a box twice as large, the network has the same characteristic size in Jeans units (about one clump per 16 to 18 square Jeans lengths), so it is not a box-size artefact. It is still not frozen: in both box sizes, about two-thirds of the clumps merge between 5 and 20 Jeans times. Whether coarsening eventually stalls is the main open question.
+**In a static box, as in the original simulations, the cells are transient.** The negative clumps keep merging until a single box-sized clump remains, in every seed and box size tested. Under the original assumptions, the simulations support "cells form" but not "cells are stable".
 
-All results are 2-D. A 3-D extension and a GPU port are planned.
+**With a cosmic expansion added (not part of the original setup), merging slows but does not stop.** A multi-cell network with negative clumps inside ordinary-matter voids survives to the end of every expanding run, reproducibly across seeds. In the largest box (32 Jeans lengths, 60 Jeans times), the clump count falls from a peak of 78 to 22, with the merging rate dropping from about 30% to about 10-20% per 10 Jeans times, but never reaching zero. An apparent plateau in a smaller box turned out to be the structure reaching box scale. The slowdown comes from the imposed expansion law, not from an equilibrium of the model.
+
+**The large cells need twin matter.** Ordinary matter alone, under the same expansion, forms only fine-grained structure about a quarter of the size of the mixed run's cells.
+
+All results are 2-D. The code also runs in 3-D and on the GPU; 3-D runs and the spiral-galaxy scenario are next.
 
 ## Background: the claims being tested
 
@@ -31,27 +35,29 @@ The project was carried out with a chain of AI-assisted steps, each written to a
 3. **Synthesis** (`synthesize.py`, output `final_report.md`): Claude Opus merged the summaries into a categorized report of the site.
 4. **Investigation** (`investigate.py`, output `astrophysics_investigation.md`): Claude Fable carried out a neutral investigation of the computational astrophysics, focused on the twin-matter N-body simulations.
 5. **Simulation design and code** (`build_sim.py`, outputs `simulation_notes.md` and `sim/`): Claude Fable designed the simulation from the investigation and the original pages, listing every assumption where the sources are vague, and wrote it as separate modules.
-6. **Runs and validation**: simulations were run, tested and debugged as described below.
-7. **Interpretation** (`sim/interpret_run.py`, outputs `interpretation.md` in each run folder): Claude Fable reviewed each key run's snapshots alongside its measured data.
+6. **GPU port** (`build_gpu.py` and `build_gpu_diag.py`, outputs `sim_gpu/` and `sim_gpu2/`): Claude Fable ported the forces, integrator and diagnostics to the GPU with PyTorch.
+7. **Runs and validation**: simulations were run, tested and debugged as described below.
+8. **Interpretation** (`sim/interpret_run.py`, outputs `interpretation.md` in each run folder): Claude Fable reviewed each key run's snapshots alongside its measured data.
 
-All simulation code was AI-generated and should be read with that in mind. It was validated through the convergence and control tests below rather than line-by-line review.
+All simulation code was AI-generated and should be read with that in mind. It was validated through the convergence, control and CPU-versus-GPU tests below rather than line-by-line review.
 
 ### Numerical model
 
 - **Method**: particle-mesh (PM) gravity with FFT, in a periodic 2-D box of unit size, using the kernel -2πG/|k| (a razor-thin sheet with a 1/r² force law in the plane). A direct-summation O(N²) mode is available for cross-checks.
 - **Interaction laws**: same-sign masses attract; opposite-sign masses repel. Equations of motion use |m| as inertial mass, so the |m|-weighted momentum is conserved while the signed momentum is not.
-- **Integrator**: leapfrog kick-drift-kick, fixed timestep (default 0.02 negative Jeans times), float64.
+- **Integrator**: leapfrog kick-drift-kick, fixed timestep (default 0.02 negative Jeans times).
 - **Mean density**: the k=0 mode is removed (the standard "Jeans swindle"), since the box has a net negative mass.
 - **Initial conditions**: Poisson-uniform positions for both populations, Maxwellian velocities; shot noise seeds the instability.
 - **Parameters from the original work**: twin-to-ordinary density ratio 64, velocity dispersion ratio 4.
-- **Assumed**: absolute velocity scale set so the negative Jeans length is 1/8 of the box; softening equal to the PM cell size; run length 20 negative Jeans times.
+- **Assumed**: absolute velocity scale set from the negative Jeans length relative to the box; softening equal to the PM cell size; run length 20 to 60 negative Jeans times.
 - **Expansion (optional)**: comoving frame with a(t) ∝ t^(2/3) switched on at 1 Jeans time. This is a standard kinematic expansion law, not one derived from the Janus model.
+- **Precision**: float64 on the CPU; float32 on the GPU, validated against float64.
 
 All 17 assumptions (A1 to A17) are printed at the start of every run and saved as `assumptions.txt` in each output folder.
 
 ### Diagnostics and pre-registered criteria
 
-Each run records energy and momentum conservation, clump counts and masses, a segregation index (anti-correlation of the two density fields), a persistence index (similarity of the pattern to a reference time), and the dominant structure scale. Three pass/fail criteria were fixed before any results: `cells_form`, `stable_clumps` and `persistence`.
+Each run records energy and momentum conservation, clump counts and masses, a segregation index (anti-correlation of the two density fields), a persistence index (similarity of the pattern to a reference time), and the dominant structure scale. Three pass/fail criteria were fixed before any results: `cells_form`, `stable_clumps` and `persistence`. Some of these proved to be weak tests: segregation measured pixel by pixel weakens as walls thicken even when the populations remain visibly separate, and persistence measured against t = 5 penalizes any merging. The conclusions above therefore rely mainly on clump counts, structure scales and the images.
 
 ### Validation
 
@@ -72,6 +78,10 @@ The key lesson is that the strongly unstable negative population needs about 200
 
 In expanding runs, E = KE + U is not conserved by design, so its large reported drift is expected; timestep convergence is used as the accuracy check instead.
 
+### GPU port
+
+The forces, integrator and diagnostics also run on an AMD Radeon RX 9060 XT via PyTorch with ROCm under WSL. In float64, GPU forces agree with the CPU to about 1e-15 and every diagnostic to about 1e-13; in float32, forces agree to about 1e-5. The GPU baseline reproduces the CPU baseline's metrics, verdicts and energy history, and runs in 35 s instead of 189 s; on large runs, forces are about 10 times faster.
+
 ## Results
 
 ### Static box (original setup)
@@ -85,31 +95,48 @@ In expanding runs, E = KE + U is not conserved by design, so its large reported 
 
 Timeline of the baseline run: the first 5 clumps appear at 2 Jeans times, peak at 8 clumps at 2.5, merge steadily to one clump by 5.5, and the final clump (about 40% of the negative mass, a quarter of the box across) is frozen from about 7 Jeans times onward.
 
-### Expanding box
+### Expanding box, 8 Jeans lengths across
 
-| Run | Final negative clumps | Dominant scale | Clump loss, t = 5 to 20 |
-|---|---|---|---|
-| 8 Jeans lengths across | 4 | Whole box | -64% |
-| 8 Jeans lengths, half timestep | 4 | Whole box | -64% |
-| 16 Jeans lengths across | 14 | 1/3 of the box | -69% |
+| Seed | 1 | 2 | 3 | 4 | 5 | Mean |
+|---|---|---|---|---|---|---|
+| Final clumps | 4 | 3 | 5 | 4 | 4 | 4.0 ± 0.6 |
+| Clump loss, t = 5 to 20 | -64% | -57% | -67% | -64% | -67% | -64% ± 3% |
 
-In expanding runs, the twin clumps remain inside ordinary-matter voids throughout and the populations never mix. The decline of the segregation index in these runs appears to be a property of the index once most twin mass is concentrated in a few small clumps, rather than a physical mixing.
+The same run with half the timestep gives identical metrics. Every seed keeps a multi-clump network where every static run ends with one clump.
+
+### Long expanding runs (60 Jeans times)
+
+| Time (Jeans times) | 10 | 20 | 30 | 40 | 50 | 60 |
+|---|---|---|---|---|---|---|
+| Clumps, 16 Jeans lengths | 29 | 14 | 12 | 8 | 7 | 7 |
+| Clumps, 32 Jeans lengths | 78 | 50 | 35 | 31 | 25 | 22 |
+| Dominant scale, 32 Jeans lengths (fraction of box) | 0.14-0.2 | 0.2 | 0.2-0.25 | 0.2-0.25 | 0.25-0.33 | 0.33 |
+
+Up to about 30 Jeans times, clump density per unit area agrees between the two boxes to within about 10%, so this phase is not a box effect. Afterwards they diverge: the smaller box stops at 7 clumps because its structure reaches box scale, while in the larger box merging continues, slowing from about 30% to about 10-20% per 10 Jeans times. In the 16-length box without expansion, everything merges into one clump within 20 Jeans times.
+
+### Positives-only control (32 Jeans lengths, expansion, 60 Jeans times)
+
+Ordinary matter alone forms only fine-grained structure, with a dominant scale of 0.08 of the box at the end, against 0.25-0.33 in the mixed run, and a nearly frozen pattern. The large cells, and their evolution, require twin matter; ordinary matter's own gravity plausibly contributes the small knots within the walls.
 
 ### In progress
 
-A seed ensemble with expansion, and a longer big-box expansion run (60 Jeans times) to see whether coarsening stalls.
+A 64-Jeans-length box with expansion (51 million particles, GPU) to follow coarsening without reaching the box scale; the spiral-galaxy scenario; and 3-D runs.
+
+## What this says about the original claims
+
+The mechanism Petit described is reproducible and robust: twin matter clumps, ordinary matter is confined to walls, and a cellular pattern forms quickly. The stability he reported is not reproduced under his assumptions: in a static box, the cells merge until one clump remains. With an added expansion law, merging slows strongly but continues. The simulations do not test the claims about dark matter, galaxy rotation or the observed cosmic web.
 
 ## Limitations
 
-- 2-D only; the original work was also 2-D, but real structure formation is 3-D.
+- 2-D only so far; the original work was also 2-D, but real structure formation is 3-D.
 - The absolute velocity scale, softening and run length are not given in the original sources and were assumed.
 - The expansion law is a generic kinematic one, not derived from the Janus model, and expansion was not part of the original simulations.
-- Some diagnostics have known weaknesses: persistence depends on the choice of reference time, and the `cells_form` trigger fires on weak early anti-correlation.
+- Some diagnostics have known weaknesses (see above).
 - No quantitative comparison with observations has been made.
 
 ## Reproducing
 
-Requirements: Python 3.12, numpy, scipy, matplotlib (and anthropic for the AI pipeline scripts, with `ANTHROPIC_API_KEY` set in the environment).
+Requirements: Python 3.12, numpy, scipy, matplotlib (and anthropic for the AI pipeline scripts, with `ANTHROPIC_API_KEY` set in the environment). The GPU version additionally needs ROCm and AMD's ROCm build of PyTorch (tested with ROCm 7.2 and PyTorch 2.9.1 under WSL on Ubuntu 24.04).
 
 ```bash
 python -m venv venv && source venv/bin/activate
@@ -118,26 +145,36 @@ cd sim
 python main.py --help
 python main.py assumptions lss
 
-# Trustworthy static baseline (about 3 minutes)
+# Trustworthy static baseline (about 3 minutes on the CPU)
 python main.py lss --grid 64 --npos 400000 --nneg 400000
 
 # Seed ensemble
 python main.py ensemble lss --seeds 5 --grid 64 --npos 400000 --nneg 400000
 
-# Expansion, big box (about 12 minutes)
-python main.py lss --grid 128 --npos 1600000 --nneg 1600000 --lambda-j-neg 0.0625 --expansion
+# Expansion, 32 Jeans lengths, 60 Jeans times
+python main.py lss --grid 256 --npos 6400000 --nneg 6400000 --lambda-j-neg 0.03125 --expansion --tmax 60
 
 # Fable's review of a run, and movies
 python interpret_run.py out/<run_folder>
 ./make_movies.sh
 ```
 
+GPU version, from `sim_gpu2/`:
+
+```bash
+python main.py gputest    # GPU vs CPU forces
+python main.py diagtest   # GPU vs CPU diagnostics
+python main.py lss --device gpu --grid 64 --npos 400000 --nneg 400000
+```
+
 ## Repository layout
 
 - `scriptscrape.py`, `synthesize.py`, `investigate.py`, `build_sim.py`: AI research pipeline
-- `final_report.md`, `astrophysics_investigation.md`, `simulation_notes.md`: pipeline outputs
-- `sim/`: simulation modules, entry point `main.py`, and helper scripts
-- `sim/out/`: run outputs (summaries, CSVs, assumptions, interpretations, movies; snapshot PNGs excluded)
+- `build_gpu.py`, `build_gpu_diag.py`, `export_prompt.py`: GPU port pipeline
+- `final_report.md`, `astrophysics_investigation.md`, `simulation_notes.md`, `gpu_plan.md`, `gpu_diag_plan.md`: pipeline outputs
+- `sim/`: CPU simulation (the validated reference), helper scripts, and run outputs in `sim/out/`
+- `sim_gpu/`: first GPU version (forces and integrator)
+- `sim_gpu2/`: current GPU version (forces, integrator and diagnostics)
 - `media/`: animations shown above
 
 ## References
