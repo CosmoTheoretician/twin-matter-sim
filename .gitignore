@@ -16,3 +16,4 @@ sim_gpu/out/**/frames.txt
 sim_gpu2/out/**/frames.txt
 *.whl
 *.pt
+pts_*.npz

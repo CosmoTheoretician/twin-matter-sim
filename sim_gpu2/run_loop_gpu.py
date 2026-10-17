@@ -131,6 +131,10 @@ def run_loop_gpu(cfg: RunConfig, der: Derived, ps: ParticleSet, force: ForceEval
             snapshot_t(gp, der.box, t / der.t_ref, der.t_ref_name,
                        os.path.join(outdir, f'snap_{k:04d}.png'), der.dim, centre=c,
                        extent=extent if relative else None, title=title, subsample=sub)
+            import numpy as _np
+            _np.savez_compressed(os.path.join(outdir, f'pts_{k:04d}.npz'), t=t / der.t_ref, box=der.box,
+                                 pos=sub.positions(gp, 'pos', centre=c, box=der.box).astype(_np.float32),
+                                 neg=sub.positions(gp, 'neg', centre=c, box=der.box).astype(_np.float32))
 
     row0 = log_diag()
     E0 = row0['E']
